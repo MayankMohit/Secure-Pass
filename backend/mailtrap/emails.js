@@ -1,5 +1,5 @@
 import { mailtrapClient, sender } from "./mailtrap.js";
-import { VERIFICATION_EMAIL_TEMPLATE } from "./emailTemplates.js";
+import { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE } from "./emailTemplates.js";
 
 export const sendVerificationEmail = async (email, verificationToken) => {
     const recipient = [{ email }];
@@ -11,9 +11,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
             html: VERIFICATION_EMAIL_TEMPLATE.replace("{verificationCode}", verificationToken),
             category: "Email Verification"
         })
-        console.log("Email Sent Successfully", response);
     } catch (error) {
-        console.log(`Error Sending verification email: ${error}`);
         throw new Error(`Error Sending verification email ${error}`)
     }
 }
@@ -29,12 +27,38 @@ export const sendWelcomeEmail = async (email, name) => {
                 company_info_name: "Secure Pass",
                 name: name
             }
-        })
-
-        console.log("Welcome email sent successfully. ", response);
-        
+        })        
     } catch (error) {
-        console.log(`Error Sending welcome email: ${error}`);
         throw new Error(`Error Sending welcome email ${error}`)
+    }
+}
+
+export const sendPasswordResetEmail = async (email, resetURL) => {
+    const recipient = [{ email }];
+    try {
+        const response = await mailtrapClient.send({
+            from: sender,
+            to: recipient,
+            subject: "Reset Your Password",
+            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetURL),
+            category: "Password Reset"
+        })
+    } catch (error) {
+        throw new Error(`Error Sending password reset email ${error}`)
+    }
+}
+
+export const sendResetSuccessEmail = async (email) => {
+    const recipient = [{ email }];
+    try {
+        const response = await mailtrapClient.send({
+            from: sender,
+            to: recipient,
+            subject: "Reset Password Successful",
+            html: PASSWORD_RESET_SUCCESS_TEMPLATE,
+            category: "Password Reset"
+        })
+    } catch (error) {
+        throw new Error(`Error Sending reset success email: ${error}`)
     }
 }
