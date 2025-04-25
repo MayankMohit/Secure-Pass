@@ -28,10 +28,10 @@ const PasswordCriteria = ({ password }) => {
 const PasswordStrengthMeter = ({password}) => {
     const getStrength = (pass) => {
         const criteria = [
-            password.length >= 8,
-            /[A-Z]/.test(password) && /[a-z]/.test(password),
-            /\d/.test(password),
-            /[^A-Za-z0-9]/.test(password),
+            pass.length >= 8,
+            /[A-Z]/.test(pass) && /[a-z]/.test(pass),
+            /\d/.test(pass),
+            /[^A-Za-z0-9]/.test(pass),
         ]
         const metCriteria = criteria.filter(Boolean).length
         return metCriteria;
@@ -74,7 +74,7 @@ const PasswordStrengthMeter = ({password}) => {
     return <div className='mt-2'>
         <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-gray-400">Password Strength</span>
-            <span className={`text-xs text-gray-400 `}>{getStrengthText(strength)}</span>
+            <span className="text-xs text-gray-400">{getStrengthText(strength)}</span>
         </div>
         <div className='flex space-x-1'>
             {[...Array(4)].map((_, index) => (
