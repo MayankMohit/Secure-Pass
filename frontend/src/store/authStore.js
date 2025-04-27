@@ -11,6 +11,8 @@ export const useAuthStore = create((set) => ({
     error: null,
     isCheckingAuth: true,
 
+    setError: (error) => set({ error }),
+
     login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
@@ -49,17 +51,15 @@ export const useAuthStore = create((set) => ({
         try {
             const response = await axios.post(`${API_URL}/verify-email`, { code });
             set({ user: response.data.user, isAuthenticated: true, isLoading: false });
-            return response.data; // Return the response data for further processing if needed
+            return response.data;
         } catch (error) {
             set({ error: error.response.data.message || "Error Verifying Email", isLoading: false });
-            throw error; // Rethrow the error for handling in the component
+            throw error; 
         }
     },
 
     checkAuth: async () => {
-        // await new Promise((resolve) => setTimeout(resolve, 500));
         set({ isCheckingAuth: true, error: null });
-        
         try {
             const response = await axios.get(`${API_URL}/check-auth`); 
             set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });

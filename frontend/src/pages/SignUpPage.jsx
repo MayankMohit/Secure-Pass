@@ -1,18 +1,26 @@
 import { motion } from 'framer-motion';
 import Input from '../components/Input';
 import { User, Mail, Lock, Loader } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 import { useAuthStore } from '../store/authStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const SignUpPage = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { signup, error, isLoading } = useAuthStore();
+    const { signup, error, isLoading, setError } = useAuthStore();
+    if(error) setError(null)
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname === '/login') {
+          setError(null);
+        }
+      }, [location.pathname, setError]);
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -21,6 +29,7 @@ const SignUpPage = () => {
             navigate('/verify-email');
         }catch (error) {
             console.log(error);
+            setTimeout(() => set({ error: null }), 3000);
         }
     }
 

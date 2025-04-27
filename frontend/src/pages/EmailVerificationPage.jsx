@@ -8,8 +8,8 @@ const EmailVerificationPage = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef([]);
     const navigate = useNavigate();
-    const { error, isLoading, verifyEmail } = useAuthStore();
-    
+    const { error, isLoading, verifyEmail, setError } = useAuthStore();
+    if(error) setError(null)
     const handleChange = (index, value) => {
         const newCode = [...code];
         if (value.length > 1) {
